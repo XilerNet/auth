@@ -41,7 +41,7 @@ const XilerAuthLogin = async (setEmailToken: (token: string | null) => void) => 
   }
   let data = await res.json();
 
-  if (data?.next_action !== undefined) {
+  if (data?.next_action !== null && data?.next_action !== undefined) {
     switch (data.next_action) {
       case "set_email":
         setEmailToken(data.token);
