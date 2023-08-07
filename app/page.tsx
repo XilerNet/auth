@@ -1,7 +1,8 @@
 'use client'
 import "./global.css";
-import { BitCheckProvider, useAuth } from '@bitcheck/auth-react';
-import {useEffect, useState} from "react";
+import {BitCheckProvider, useAuth} from '@bitcheck/auth-react';
+import {useEffect, useRef, useState} from "react";
+import {ScaleLoader} from "react-spinners";
 
 // env based on dev or prod
 const API_BASE_URL = process.env.NODE_ENV === 'development' ? 'http://localhost:8000/api' : 'https://auth.xiler.net/api';
@@ -13,11 +14,9 @@ const endpoint = (endpoint: string) => `${API_BASE_URL}/${endpoint}`;
 const fetchXiler = async (url: string, method: string, body: Object) => {
     try {
         return await fetch(endpoint(url), {
-            method: 'POST',
-            headers: {
+            method: 'POST', headers: {
                 'Content-Type': 'application/json',
-            },
-            body: JSON.stringify(body)
+            }, body: JSON.stringify(body)
         });
     } catch (e) {
         console.error(e);
@@ -31,7 +30,7 @@ const fetchXiler = async (url: string, method: string, body: Object) => {
 
 const XilerAuthLogin = async (setEmailToken: (token: string | null) => void) => {
     const token = localStorage.getItem(BITCHECK_TOKEN_LOCATION);
-    const res = await fetchXiler("login", "POST", { token });
+    const res = await fetchXiler("login", "POST", {token});
 
     if (res == null) {
         return;
@@ -48,7 +47,7 @@ const XilerAuthLogin = async (setEmailToken: (token: string | null) => void) => 
             case "set_email": {
                 setEmailToken(data.token);
             }
-            break;
+                break;
         }
         return;
     }
@@ -57,7 +56,7 @@ const XilerAuthLogin = async (setEmailToken: (token: string | null) => void) => 
 }
 
 const XilerAuthSetEmail = async (email: string, token: string, setEmailToken: (token: string | null) => void) => {
-    const res = await fetchXiler("set_email", "POST", { token, email });
+    const res = await fetchXiler("email", "POST", {token, email});
 
     if (res == null) {
         return;
@@ -82,57 +81,51 @@ const XilerAuthSetEmail = async (email: string, token: string, setEmailToken: (t
 
 // TODO: Further question after auth requesting email if none is found
 const BitCheckAuthentication = () => {
-  const { user, login, logout } = useAuth();
-  const [emailToken, setEmailToken] = useState<string | null>(null);
-  const [email, setEmail] = useState<string | null>(null);
+    const {user, login, logout} = useAuth();
+    const [emailToken, setEmailToken] = useState<string | null>(null);
+    const [email, setEmail] = useState<string | null>(null);
+    const emailRef = useRef<HTMLInputElement>(null);
 
-  useEffect(() => {
-      localStorage.clear();
-  }, []);
+    useEffect(() => {
+        localStorage.clear();
+        login();
+    }, [login]);
 
-  useEffect(() => {
-      const performLogin = async () => {
-          if (user && !emailToken) {
-              await XilerAuthLogin((token) => setEmailToken(token));
-          }
-      }
+    useEffect(() => {
+        const performLogin = async () => {
+            if (user && !emailToken) {
+                await XilerAuthLogin((token) => setEmailToken(token));
+            }
+
+            if (emailToken) {
+                emailRef.current?.focus();
+                emailRef.current?.select();
+            }
+        }
 
         performLogin().then();
-  }, [user, emailToken]);
+    }, [user, emailToken]);
 
-  return (
-    <div>
-        {
-            emailToken ? (
-                <>
-                    <p>Please enter your email to continue</p>
-                    <input type="email" placeholder="Email" onChange={(e) => setEmail(e.target.value)} />
-                    <button onClick={() => XilerAuthSetEmail(email!, emailToken!, (token) => setEmailToken(token))}>Submit</button>
-                </>
-            ) : user ? (
-                <>
-                    <p>loading...</p>
-                    <button onClick={() => logout()}>Logout</button>
-                </>
-            ) : (
-                <>
-                    <p>Please login to xiler.</p>
-                    <button onClick={() => login()}>Login</button>
-                </>
-            )
-        }
-      </div>
-  );
+    return (<div className="auth">
+            {emailToken ? (<>
+                    <p className="xiler-text">Please enter your email to continue:</p>
+                    <input className="xiler-input" ref={emailRef} type="email" placeholder="Email"
+                           onChange={(e) => setEmail(e.target.value)}/>
+                    <button className="xiler-button"
+                            onClick={() => XilerAuthSetEmail(email!, emailToken!, (token) => setEmailToken(token))}>Continue
+                    </button>
+                </>) : user ? (<>
+                    <button className="xiler-button" onClick={() => logout()}>Logout</button>
+                </>) : (<ScaleLoader color="#ffffff"/>)}
+        </div>);
 };
 
 const App = () => {
-  const clientId = "845ff7e5-fc75-4824-82ce-cd3fcc9059b0";
+    const clientId = "845ff7e5-fc75-4824-82ce-cd3fcc9059b0";
 
-  return (
-    <BitCheckProvider clientID={clientId}>
-      <BitCheckAuthentication />
-    </BitCheckProvider>
-  );
+    return (<BitCheckProvider clientID={clientId}>
+            <BitCheckAuthentication/>
+        </BitCheckProvider>);
 }
 
 
