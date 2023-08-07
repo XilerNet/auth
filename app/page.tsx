@@ -107,25 +107,28 @@ const BitCheckAuthentication = () => {
     }, [user, emailToken]);
 
     return (<div className="auth">
-            {emailToken ? (<>
-                    <p className="xiler-text">Please enter your email to continue:</p>
-                    <input className="xiler-input" ref={emailRef} type="email" placeholder="Email"
-                           onChange={(e) => setEmail(e.target.value)}/>
-                    <button className="xiler-button"
-                            onClick={() => XilerAuthSetEmail(email!, emailToken!, (token) => setEmailToken(token))}>Continue
-                    </button>
-                </>) : user ? (<>
-                    <button className="xiler-button" onClick={() => logout()}>Logout</button>
-                </>) : (<ScaleLoader color="#ffffff"/>)}
-        </div>);
+        {emailToken ? (<>
+            <p className="xiler-text">Please enter your email to continue:</p>
+            <input className="xiler-input" ref={emailRef} type="email" placeholder="Email"
+                   onChange={(e) => setEmail(e.target.value)}/>
+            <button className="xiler-button"
+                    onClick={() => XilerAuthSetEmail(email!, emailToken!, (token) => setEmailToken(token))}>Continue
+            </button>
+        </>) : user ? (<>
+            <button className="xiler-button" onClick={() => logout()}>Logout</button>
+        </>) : (<>
+            <ScaleLoader color="#ffffff"/>
+            <button className="xiler-button" onClick={() => login()}>Login</button>
+        </>)}
+    </div>);
 };
 
 const App = () => {
     const clientId = "845ff7e5-fc75-4824-82ce-cd3fcc9059b0";
 
     return (<BitCheckProvider clientID={clientId}>
-            <BitCheckAuthentication/>
-        </BitCheckProvider>);
+        <BitCheckAuthentication/>
+    </BitCheckProvider>);
 }
 
 
