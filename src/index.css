@@ -1,0 +1,53 @@
+body {
+  padding: 0;
+  margin: 0;
+  font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', 'Roboto', 'Oxygen',
+    'Ubuntu', 'Cantarell', 'Fira Sans', 'Droid Sans', 'Helvetica Neue',
+    sans-serif;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+}
+
+.auth {
+  width: 100dvw;
+  height: 100dvh;
+
+  background-color: #3598DB;
+
+  display: flex;
+  flex-direction: column;
+  gap: 0.5rem;
+
+  justify-content: center;
+  align-items: center;
+}
+
+.xiler-button {
+  margin-top: 1rem;
+  padding: 0.5rem 1rem;
+
+  border: none;
+  border-radius: 0.25rem;
+
+  background-color: #fff;
+
+  cursor: pointer;
+}
+
+.xiler-input {
+  padding: 0.5rem 1rem;
+
+  border: none;
+  border-radius: 0.25rem;
+
+  background-color: #fff;
+
+  cursor: text;
+}
+
+.xiler-text {
+  color: #fff;
+  font-size: 1.5rem;
+  font-weight: 500;
+  margin: 0;
+}
