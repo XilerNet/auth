@@ -5,9 +5,10 @@ import {useEffect, useRef, useState} from "react";
 import {ScaleLoader} from "react-spinners";
 
 // env based on dev or prod
-const API_BASE_URL = process.env.NODE_ENV === 'development' ? 'http://localhost:8000/api' : 'https://auth-api.xiler.net/api';
 const BITCHECK_TOKEN_LOCATION = "bitcheck-auth-token";
-const CALLBACK_URL = process.env.NODE_ENV === 'development' ? 'http://localhost:8080/auth' : 'https://xiler.net/auth';
+const isDevelopment = process.env.NODE_ENV === 'development';
+const API_BASE_URL = isDevelopment ? 'http://localhost:8000' : 'https://auth-api.xiler.net';
+const CALLBACK_URL = isDevelopment ? 'http://localhost:8080/auth' : 'https://xiler.net/auth';
 
 const endpoint = (endpoint: string) => `${API_BASE_URL}/${endpoint}`;
 
