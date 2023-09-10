@@ -84,6 +84,7 @@ const BitCheckAuthentication = () => {
   const emailRef = useRef<HTMLInputElement>(null);
 
   useEffect(() => {
+    localStorage.clear();
     login();
   }, [login]);
 
