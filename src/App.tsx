@@ -6,7 +6,7 @@ import {ScaleLoader} from "react-spinners";
 const BITCHECK_TOKEN_LOCATION = "bitcheck-auth-token";
 const isDevelopment = process.env.NODE_ENV === 'development';
 const API_BASE_URL = isDevelopment ? 'http://localhost:8000' : 'https://auth-api.xiler.net';
-const CALLBACK_URL = isDevelopment ? 'http://localhost:8001/#/auth' : 'https://private-alpha-3hveh2uefzuqepp9a.xiler.net/#/auth';
+const CALLBACK_URL = isDevelopment ? 'http://localhost:8001/#/auth' : 'https://xiler.net/#/auth';
 
 const endpoint = (endpoint: string) => `${API_BASE_URL}/${endpoint}`;
 
